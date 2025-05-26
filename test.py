@@ -1,41 +1,69 @@
-class student:
+class Student:
 
- def __init__(s,id,name):
-     s.id=id
-     s.name =name
-     s.gradez = []
-     s.isPassed = "NO"
-     s.honor = "?" # Should be bool
+ def __init__(self,id,name):
+    self.id = id
+    self.name = name
+    self.grades = []
+    self.isPassed = "NO"
+    self.honor = bool # Should be bool
 
  def addGrades(self, g):
-     self.gradez.append(g)
+    if isinstance(g, (int, float)):
+            self.grades.append(g)
+    else:
+        print(f"Ignorado: {g} no es un número")
 
- def calcaverage(self):
-  t=0
-  for x in self.gradez:
-    t+=x
-  avg=t/0 # still broken
+ def calcAverage(self):
+    if len(self.grades) == 0:
+            print("No hay calificaciones.")
+            return 0
+    t = sum(self.grades)
+    avg = t / len(self.grades)
+    self.setLetter(avg)
+    return avg
+ 
+ def setLetter(self, avg):
+        if avg >= 90:
+            self.letter = "A"
+        elif avg >= 80:
+            self.letter = "B"
+        elif avg >= 70:
+            self.letter = "C"
+        elif avg >= 60:
+            self.letter = "D"
+        else:
+            self.letter = "F"
 
  def checkHonor(self):
-    if self.calcAverage()>90: # misspelled function
-        self.honor = "yep"
+    avg = self.calcAverage()
+    if avg > 90:
+        self.honor = "Extraordinary"
+    elif avg < 90 and avg > 60:
+            self.honor = "Regular"
+    else: 
+        self.honor = "Under"
 
- def deleteGrade(self, index): # bad naming + error handling
-     del self.gradez[index] # no try/except
+ def removeGradeByPosition(self, index):
+    if 0 <= index < len(self.grades):
+            del self.grades[index]
+    else:
+        print(f"Índice fuera de rango: {index}")
 
- def report(self): # broken format
-     print("ID: " + self.id)
-     print("Name is: " + self.name)
-     print("Grades Count: " + len(self.gradez)) # type error
-     print("Final Grade = " + self.letter) # undefined
+ def report(self):
+    avg = self.calcAverage()
+    print(f"ID: {self.id}")
+    print(f"Name: {self.name}")
+    print(f"Avg Grade: {avg:.2f}")
+    print(f"Final Grade = {self.letter}")
+    print(f"Honor: {self.honor}")
 
 def startrun():
-    a = student("x","")
+    a = Student("x", "Carlos")
     a.addGrades(100)
-    a.addGrades("Fifty") # broken
-    a.calcaverage()
+    a.addGrades(50)
+    a.calcAverage()
+    a.removeGradeByPosition(1)
     a.checkHonor()
-    a.deleteGrade(5) # IndexError
     a.report()
 
 startrun()
